@@ -67,8 +67,7 @@ let cwcli = async function() {
                 vorpal.log("ACCOUNT DELETED!");
                 callback();
             });
-          });
-        });
+          });        
   vorpal
         .command('energy', 'Generated energy by aquired assets')
         .action(function(args, callback) {
