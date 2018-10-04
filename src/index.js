@@ -61,6 +61,15 @@ let cwcli = async function() {
           });
         });
   vorpal
+        .command('FORGET', 'DANGERZONE! This will remove ownership for GDPR compliance')
+        .action(function(args, callback) {
+            wallet.deleteData(wallet.address).then(function(transaction) {
+                vorpal.log("ACCOUNT DELETED!");
+                callback();
+            });
+          });
+        });
+  vorpal
         .command('energy', 'Generated energy by aquired assets')
         .action(function(args, callback) {
           CorrentlyWallet.CorrentlyAccount(wallet.address).then(function(_account) {
