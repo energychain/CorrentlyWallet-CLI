@@ -25,7 +25,8 @@
 	},
 	"scripts": {
 		"test": "mocha --harmony -r esm --reporter spec tests/index.js",
-		"start": "node --harmony -r esm src/index.js"
+		"start": "node --harmony -r esm src/index.js",
+		"dist": "babel --presets es2015 src --out-dir dist"
 	},
 	"dependencies": {
 		"@babel/polyfill": "^7.0.0",
