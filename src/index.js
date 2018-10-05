@@ -15,6 +15,7 @@ let cwcli = async function() {
   }
 
   const vorpal = require('vorpal')();
+  let interactive = vorpal.parse(process.argv, {use: 'minimist'})._ === undefined;
 
   vorpal
         .command('address', 'prints blockchain address of this wallet')
@@ -67,7 +68,7 @@ let cwcli = async function() {
                 vorpal.log("ACCOUNT DELETED!");
                 callback();
             });
-          });        
+          });
   vorpal
         .command('energy', 'Generated energy by aquired assets')
         .action(function(args, callback) {
@@ -85,9 +86,19 @@ let cwcli = async function() {
   vorpal.log(" corrently> transactions \t- see transactions");
   vorpal.log("------------------------------------------------------------------------------");
 
-  vorpal
-  .delimiter("corrently>")
-  .show();
+  global.interactive=interactive;
+  	if (interactive) {
+  		vorpal
+  			.delimiter('corrently>')
+  			.show();
+  	} else {
+  		// argv is mutated by the first call to parse.
+  		process.argv.unshift('');
+  		process.argv.unshift('');
+  		vorpal
+  			.delimiter('')
+  			.parse(process.argv);
+  	}  
 };
 
 cwcli();

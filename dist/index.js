@@ -20,6 +20,7 @@ var cwcli = async function cwcli() {
   }
 
   var vorpal = require('vorpal')();
+  var interactive = vorpal.parse(process.argv, { use: 'minimist' })._ === undefined;
 
   vorpal.command('address', 'prints blockchain address of this wallet').action(function (args, callback) {
     this.log(wallet.address);
@@ -57,6 +58,12 @@ var cwcli = async function cwcli() {
       callback();
     });
   });
+  vorpal.command('FORGET', 'DANGERZONE! This will remove ownership for GDPR compliance').action(function (args, callback) {
+    wallet.deleteData(wallet.address).then(function (transaction) {
+      vorpal.log("ACCOUNT DELETED!");
+      callback();
+    });
+  });
   vorpal.command('energy', 'Generated energy by aquired assets').action(function (args, callback) {
     _correntlywallet2.default.CorrentlyAccount(wallet.address).then(function (_account) {
       vorpal.log(_account.generation + " kWh");
@@ -72,7 +79,15 @@ var cwcli = async function cwcli() {
   vorpal.log(" corrently> transactions \t- see transactions");
   vorpal.log("------------------------------------------------------------------------------");
 
-  vorpal.delimiter("corrently>").show();
+  global.interactive = interactive;
+  if (interactive) {
+    vorpal.delimiter('corrently>').show();
+  } else {
+    // argv is mutated by the first call to parse.
+    process.argv.unshift('');
+    process.argv.unshift('');
+    vorpal.delimiter('').parse(process.argv);
+  }
 };
 
 cwcli();
