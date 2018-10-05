@@ -1,9 +1,14 @@
 # CorrentlyWallet-CLI
 **CorrentlyWallet Command Line Interface**
 
+[![asciicast](https://asciinema.org/a/204875.png)](https://asciinema.org/a/204875)
+
 [![CircleCI](https://circleci.com/gh/energychain/CorrentlyWallet-CLI.svg?style=svg)](https://circleci.com/gh/energychain/CorrentlyWallet-CLI)
 
 This wallet is based on CorrentlyWallet library available on: https://www.npmjs.com/package/correntlywallet
+
+
+
 
 ## Installation
 ```
