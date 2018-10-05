@@ -73,15 +73,15 @@ var cwcli = async function cwcli() {
   });
   vorpal.log("CorrentlyWallet - " + wallet.address);
   vorpal.log("------------------------------------------------------------------------------");
-  vorpal.log("Usage hints: ");
-  vorpal.log(" corrently> market \t\t- see current OTC market");
-  vorpal.log(" corrently> buy #1 2 \t\t- buy from ID #1 a capacity of 2kWh/yr");
-  vorpal.log(" corrently> energy \t\t- retrieve generated electricity");
-  vorpal.log(" corrently> transactions \t- see transactions");
-  vorpal.log("------------------------------------------------------------------------------");
 
   global.interactive = interactive;
   if (interactive) {
+    vorpal.log("Usage hints: ");
+    vorpal.log(" corrently> market \t\t- see current OTC market");
+    vorpal.log(" corrently> buy #1 2 \t\t- buy from ID #1 a capacity of 2kWh/yr");
+    vorpal.log(" corrently> energy \t\t- retrieve generated electricity");
+    vorpal.log(" corrently> transactions \t- see transactions");
+    vorpal.log("------------------------------------------------------------------------------");
     vorpal.delimiter('corrently>').show();
   } else {
     // argv is mutated by the first call to parse.
