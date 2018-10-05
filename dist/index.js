@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 'use strict';
 
 var _correntlywallet = require('correntlywallet');
@@ -45,6 +44,21 @@ var cwcli = async function cwcli() {
       wallet.buyCapacity(market[id], qty).then(function (transaction) {
         vorpal.log("send.");
         vorpal.log("type transactions to see all transactions");
+        callback();
+      });
+    });
+  });
+  vorpal.command('account', 'print account information').action(function (args, callback) {
+    _correntlywallet2.default.CorrentlyAccount(wallet.address).then(function (_account) {
+      vorpal.log("Yearly Demand:\t\t\t" + _account.ja + " kWh");
+      vorpal.log("Total Collected:\t\t" + _account.totalSupply + " Corrently");
+      vorpal.log("Converted:\t\t\t" + _account.convertedSupply + " Corrently");
+      vorpal.log("Available:\t\t\t" + (_account.totalSupply - _account.convertedSupply) + " Corrently");
+      vorpal.log("Created:\t\t\t" + new Date(_account.created).toLocaleString() + "");
+      vorpal.log("Nominal Generation:\t\t" + _account.nominalCori + " kWh/year");
+      _account.getCoriEquity().then(function (x) {
+        vorpal.log("Confirmed Generation Equity:\t" + x + " kWh/year");
+        vorpal.log("Metered Generation:\t\t" + _account.generation + " kWh");
         callback();
       });
     });

@@ -36,7 +36,7 @@ let cwcli = async function() {
           });
         });
   vorpal
-        .command('buy <id> <quantity>', 'prints market overview')
+        .command('buy <id> <quantity>', 'Buy via OTC trade given number of generation capacity')
         .action(function(args, callback) {
             let id=args.id;
             let qty=args.quantity;
@@ -67,17 +67,30 @@ let cwcli = async function() {
           });
         });
   vorpal
+        .command('deletePending <id>', 'delete pending transaction')
+        .action(function(args, callback) {
+            let id=args.id;
+            let qty=args.quantity;
+            if(typeof id == "string") id=id.substr(1)*1;
+            wallet.deletePending(id).then(function(transaction) {
+                  vorpal.log("send.");
+                  vorpal.log("type transactions to see all transactions");
+                  callback();
+            });
+        });
+  vorpal
         .command('transactions', 'See all transactions of this wallet')
         .action(function(args, callback) {
           CorrentlyWallet.CorrentlyAccount(wallet.address).then(function(_account) {
-            vorpal.log("Date/Time \t\tkWh/year \tGeneration Facility (asset)");
+            vorpal.log("ID\tDate/Time \t\tkWh/year \tGeneration Facility (asset)");
             for(let i=0;i<_account.txs.length;i++) {
               let t=_account.txs[i];
-              vorpal.log(new Date(t.timeStamp).toLocaleString()+"\t"+t.cori+"\t\t"+t.asset);
+              vorpal.log(t.nonce+"\t"+new Date(t.timeStamp).toLocaleString()+"\t"+t.cori+"\t\t"+t.asset);
             }
             callback();
           });
         });
+
   vorpal
         .command('FORGET', 'DANGERZONE! This will remove ownership for GDPR compliance')
         .action(function(args, callback) {
