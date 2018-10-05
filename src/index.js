@@ -36,18 +36,44 @@ let cwcli = async function() {
           });
         });
   vorpal
-        .command('buy <id> <quantity>', 'Buy via OTC trade given number of generation capacity')
+        .command('buy [id] [quantity]', 'Buy via Over-The-Counter (OTC) given number of generation capacity')
         .action(function(args, callback) {
+          let parent=this;
+          CorrentlyWallet.Market().then(function(market) {
             let id=args.id;
-            let qty=args.quantity;
-            if(typeof id == "string") id=id.substr(1)*1;
-            CorrentlyWallet.Market().then(function(market) {
-              wallet.buyCapacity(market[id], qty).then(function(transaction) {
-                  vorpal.log("send.");
-                  vorpal.log("type transactions to see all transactions");
-                  callback();
-              });
-            });
+            if(id==null) {
+              for(let i=0;i<market.length;i++) {
+                  vorpal.log('#'+i+':\t'+market[i].cori+"\t\t"+market[i].title);
+              }
+              parent.prompt({ type:'input',
+                              name:'id',
+                              message:'OTC Offer ID to buy? '
+                            },function(result) {
+                                id=result.id;
+                                parent.prompt({ type:'input',
+                                                name:'qty',
+                                                message:'Amount to buy? '
+                                              },function(result) {
+                                                let qty=result.qty;
+                                                if(typeof id == "string") id=id.substr(1)*1;
+                                                wallet.buyCapacity(market[id], qty).then(function(transaction) {
+                                                    vorpal.log("send.");
+                                                    vorpal.log("type transactions to see all transactions");
+                                                    callback();
+                                                });
+                                              });
+                            });
+            } else {
+                let qty=args.quantity;
+                if(qty==null) qty=1;
+                if(typeof id == "string") id=id.substr(1)*1;
+                  wallet.buyCapacity(market[id], qty).then(function(transaction) {
+                      vorpal.log("send.");
+                      vorpal.log("type transactions to see all transactions");
+                      callback();
+                  });
+            }
+          });
         });
   vorpal
         .command('account', 'print account information')

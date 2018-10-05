@@ -3,6 +3,7 @@
 
 [![CircleCI](https://circleci.com/gh/energychain/CorrentlyWallet-CLI.svg?style=svg)](https://circleci.com/gh/energychain/CorrentlyWallet-CLI)
 
+This wallet is based on CorrentlyWallet library available on: https://www.npmjs.com/package/correntlywallet
 
 ## Installation
 ```
@@ -21,7 +22,6 @@ $ corrently energy
 0.0003506081621004566 kWh
 ```
 
-
 ### market
 Prints current OTC market available to wallet
 ```
@@ -37,3 +37,7 @@ Issues an OTC buy transaction.
 ```
 $ corrently buy 1 1
 ```
+
+## Contributing
+- https://stromdao.de/
+- https://gitter.im/corrently/Token
