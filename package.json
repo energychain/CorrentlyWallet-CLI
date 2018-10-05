@@ -1,6 +1,6 @@
 {
 	"name": "correntlywallet-cli",
-	"version": "0.9.6",
+	"version": "0.9.7",
 	"description": "Corrently Wallet - Command Line Interface",
 	"keywords": [
 		"corrently",
@@ -17,7 +17,7 @@
 	"author": "Corrently Corp <support@corrently.com>",
 	"main": "src/index.js",
 	"bin": {
-		"corrently": "./dist/index.js"
+		"corrently": "./dist/corrently.js"
 	},
 	"repository": {
 		"type": "git",

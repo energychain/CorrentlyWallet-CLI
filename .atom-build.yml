@@ -1,4 +1,6 @@
 cmd: npm test
 targets:
-  Publsh:
+  Build:
+      cmd: "babel --presets es2015 src --out-dir dist"
+  Publish:
       cmd: "npm test && babel --presets es2015 src --out-dir dist && npm publish"
