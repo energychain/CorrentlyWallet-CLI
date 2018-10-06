@@ -77,10 +77,14 @@ let cwcli = async function() {
           });
         });
   vorpal
-        .command('account', 'print account information')
+        .command('account [EthereumAddress]', 'print account information')
         .action(function(args, callback) {
-          CorrentlyWallet.CorrentlyAccount(wallet.address).then(function(_account) {
-            vorpal.log("Ethereum Address:\t\t"+wallet.address);
+          let address=wallet.address;
+          if(args.EthereumAddress != null) {
+            address=args.EthereumAddress.substr(args.EthereumAddress.indexOf(":")+1);
+          }
+          CorrentlyWallet.CorrentlyAccount(address).then(function(_account) {
+            vorpal.log("Ethereum Address:\t\t"+address);
             vorpal.log("Yearly Demand:\t\t\t"+_account.ja+" kWh");
             vorpal.log("Total Collected:\t\t"+_account.totalSupply+" Corrently");
             vorpal.log("Converted:\t\t\t"+_account.convertedSupply+" Corrently");
@@ -90,10 +94,16 @@ let cwcli = async function() {
             _account.getCoriEquity().then(function(x) {
               vorpal.log("Confirmed Generation Equity:\t"+x+" kWh/year");
               vorpal.log("Metered Generation:\t\t"+_account.generation+" kWh");
-              wallet.getBalance().then(function(balance) {
-                vorpal.log("ETH Balance:\t\t\t"+CorrentlyWallet.utils.formatEther(balance)+" ETH");
+              vorpal.log("Metered Consumption:\t\t"+_account.meteredconsumption+" kWh");
+              vorpal.log("./. Imbalance:\t\t\t"+(_account.generation-_account.meteredconsumption)+" kWh");
+              if(address==wallet.address) {
+                wallet.getBalance().then(function(balance) {
+                  vorpal.log("ETH Balance:\t\t\t"+CorrentlyWallet.utils.formatEther(balance)+" ETH");
+                  callback();
+                });
+              } else {
                 callback();
-              });
+              }
             })
           });
         });
@@ -112,7 +122,7 @@ let cwcli = async function() {
   vorpal
         .command('linkDemand <EthereumAddress>', 'Source of yearly consumption (sample: homestead:0x12345678901234ab1234)')
         .action(function(args, callback) {
-            let id=args.EthereumAddress.substr(args.EthereumAddress.indexOf(":")+1);            
+            let id=args.EthereumAddress.substr(args.EthereumAddress.indexOf(":")+1);
             wallet.linkDemand(id).then(function(transaction) {
                   vorpal.log("send.");
                   vorpal.log("\ttype account to see updated yearly energy demand");
