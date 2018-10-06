@@ -75,9 +75,13 @@ var cwcli = async function cwcli() {
       }
     });
   });
-  vorpal.command('account', 'print account information').action(function (args, callback) {
-    _correntlywallet2.default.CorrentlyAccount(wallet.address).then(function (_account) {
-      vorpal.log("Ethereum Address:\t\t" + wallet.address);
+  vorpal.command('account [EthereumAddress]', 'print account information').action(function (args, callback) {
+    var address = wallet.address;
+    if (args.EthereumAddress != null) {
+      address = args.EthereumAddress.substr(args.EthereumAddress.indexOf(":") + 1);
+    }
+    _correntlywallet2.default.CorrentlyAccount(address).then(function (_account) {
+      vorpal.log("Ethereum Address:\t\t" + address);
       vorpal.log("Yearly Demand:\t\t\t" + _account.ja + " kWh");
       vorpal.log("Total Collected:\t\t" + _account.totalSupply + " Corrently");
       vorpal.log("Converted:\t\t\t" + _account.convertedSupply + " Corrently");
@@ -87,10 +91,16 @@ var cwcli = async function cwcli() {
       _account.getCoriEquity().then(function (x) {
         vorpal.log("Confirmed Generation Equity:\t" + x + " kWh/year");
         vorpal.log("Metered Generation:\t\t" + _account.generation + " kWh");
-        wallet.getBalance().then(function (balance) {
-          vorpal.log("ETH Balance:\t\t\t" + _correntlywallet2.default.utils.formatEther(balance) + " ETH");
+        vorpal.log("Metered Consumption:\t\t" + _account.meteredconsumption + " kWh");
+        vorpal.log("./. Imbalance:\t\t\t" + (_account.generation - _account.meteredconsumption) + " kWh");
+        if (address == wallet.address) {
+          wallet.getBalance().then(function (balance) {
+            vorpal.log("ETH Balance:\t\t\t" + _correntlywallet2.default.utils.formatEther(balance) + " ETH");
+            callback();
+          });
+        } else {
           callback();
-        });
+        }
       });
     });
   });
