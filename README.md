@@ -7,9 +7,6 @@
 
 This wallet is based on CorrentlyWallet library available on: https://www.npmjs.com/package/correntlywallet
 
-
-
-
 ## Installation
 ```
 npm install -g correntlywallet-cli

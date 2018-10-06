@@ -8,10 +8,11 @@ let cwcli = async function() {
   let privateKey = await storage.getItem("privateKey");
   let wallet = null;
   if( privateKey != null) {
-    wallet = new CorrentlyWallet.Wallet(privateKey);
+    wallet = new CorrentlyWallet.Wallet(privateKey,CorrentlyWallet.getDefaultProvider());
   } else {
     wallet = CorrentlyWallet.Wallet.createRandom();
     await storage.setItem("privateKey",wallet.privateKey);
+    wallet = new CorrentlyWallet.Wallet(wallet.privateKey,CorrentlyWallet.getDefaultProvider());
   }
 
   const vorpal = require('vorpal')();
@@ -79,16 +80,20 @@ let cwcli = async function() {
         .command('account', 'print account information')
         .action(function(args, callback) {
           CorrentlyWallet.CorrentlyAccount(wallet.address).then(function(_account) {
+            vorpal.log("Ethereum Address:\t\t"+wallet.address);
             vorpal.log("Yearly Demand:\t\t\t"+_account.ja+" kWh");
             vorpal.log("Total Collected:\t\t"+_account.totalSupply+" Corrently");
             vorpal.log("Converted:\t\t\t"+_account.convertedSupply+" Corrently");
             vorpal.log("Available:\t\t\t"+(_account.totalSupply-_account.convertedSupply)+" Corrently");
-            vorpal.log("Created:\t\t\t"+new Date(_account.created).toLocaleString()+"");
+            vorpal.log("Valid from:\t\t\t"+new Date(_account.created).toLocaleString()+"");
             vorpal.log("Nominal Generation:\t\t"+_account.nominalCori+" kWh/year");
             _account.getCoriEquity().then(function(x) {
               vorpal.log("Confirmed Generation Equity:\t"+x+" kWh/year");
               vorpal.log("Metered Generation:\t\t"+_account.generation+" kWh");
-              callback();
+              wallet.getBalance().then(function(balance) {
+                vorpal.log("ETH Balance:\t\t\t"+CorrentlyWallet.utils.formatEther(balance)+" ETH");
+                callback();
+              });
             })
           });
         });
@@ -100,7 +105,27 @@ let cwcli = async function() {
             if(typeof id == "string") id=id.substr(1)*1;
             wallet.deletePending(id).then(function(transaction) {
                   vorpal.log("send.");
-                  vorpal.log("type transactions to see all transactions");
+                  vorpal.log("\ttype transactions to see all transactions");
+                  callback();
+            });
+        });
+  vorpal
+        .command('linkDemand <EthereumAddress>', 'Source of yearly consumption (sample: homestead:0x12345678901234ab1234)')
+        .action(function(args, callback) {
+            let id=args.EthereumAddress.substr(args.EthereumAddress.indexOf(":")+1);            
+            wallet.linkDemand(id).then(function(transaction) {
+                  vorpal.log("send.");
+                  vorpal.log("\ttype account to see updated yearly energy demand");
+                  callback();
+            });
+        });
+  vorpal
+        .command('transferCapacity <EthereumAddress> <amount>', 'Source of yearly consumption (sample: homestead:0x12345678901234ab1234 5)')
+        .action(function(args, callback) {
+            let id=args.EthereumAddress.substr(args.EthereumAddress.indexOf(":")+1);
+            wallet.transferCapacity(id,Math.round(args.amount*1)).then(function(transaction) {
+                  vorpal.log("send.");
+                  vorpal.log("\ttype account to see updated yearly energy demand");
                   callback();
             });
         });
