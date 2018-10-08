@@ -59,16 +59,7 @@ describe('Consensus validation (CORI and Corrently)', function() {
       done();
   });
 });
-describe('Well known Account validation (STROMDAO Demo User)', function() {
-  it('Validate earned Corrently and converted to CORI', function(done) {
-    CorrentlyWallet.CorrentlyAccount('0xe596B918cC07852dfA41dd7181492720C261C8E5').then(function(account) {
-        assert.equal(account.totalSupply > 0, true);
-        assert.equal(account.convertedSupply > 0, true);
-        assert.equal(account.nominalCori > 0, true);
-        assert.equal(account.ja > 0, true);
-        done();
-    });
-  });
+describe('Well known Account validation (STROMDAO Demo User)', function() {  
   it('Validate if it holds property confirmed in blockchain', function(done) {
     CorrentlyWallet.CorrentlyAccount('0xe596B918cC07852dfA41dd7181492720C261C8E5').then(function(account) {
         done();
