@@ -75,33 +75,45 @@ var cwcli = async function cwcli() {
       }
     });
   });
-  vorpal.command('account [EthereumAddress]', 'print account information').action(function (args, callback) {
+  vorpal.command('account [EthereumAddress]', 'print account information (address to be encoded as URI like homestead:0x1234)').option('-o, --output <filename>', 'Output to JSON encoded file. Use - to print to screen').action(function (args, callback) {
     var address = wallet.address;
     if (args.EthereumAddress != null) {
       address = args.EthereumAddress.substr(args.EthereumAddress.indexOf(":") + 1);
     }
     _correntlywallet2.default.CorrentlyAccount(address).then(function (_account) {
-      vorpal.log("Ethereum Address:\t\t" + address);
-      vorpal.log("Yearly Demand:\t\t\t" + _account.ja + " kWh");
-      vorpal.log("Total Collected:\t\t" + _account.totalSupply + " Corrently");
-      vorpal.log("Converted:\t\t\t" + _account.convertedSupply + " Corrently");
-      vorpal.log("Available:\t\t\t" + (_account.totalSupply - _account.convertedSupply) + " Corrently");
-      vorpal.log("Valid from:\t\t\t" + new Date(_account.created).toLocaleString() + "");
-      vorpal.log("Nominal Generation:\t\t" + _account.nominalCori + " kWh/year");
-      _account.getCoriEquity().then(function (x) {
-        vorpal.log("Confirmed Generation Equity:\t" + x + " kWh/year");
-        vorpal.log("Metered Generation:\t\t" + _account.generation + " kWh");
-        vorpal.log("Metered Consumption:\t\t" + _account.meteredconsumption + " kWh");
-        vorpal.log("./. Imbalance:\t\t\t" + (_account.generation - _account.meteredconsumption) + " kWh");
-        if (address == wallet.address) {
-          wallet.getBalance().then(function (balance) {
-            vorpal.log("ETH Balance:\t\t\t" + _correntlywallet2.default.utils.formatEther(balance) + " ETH");
-            callback();
-          });
+      if (typeof args.options.output != "undefined" && args.options.output != null) {
+        _account.available = _account.totalSupply - _account.convertedSupply;
+        _account.imbalance = _account.generation - _account.meteredconsumption;
+        if (args.options.output == "-") {
+          vorpal.log(JSON.stringify(_account));
         } else {
-          callback();
+          var fs = require("fs");
+          fs.writeFileSync(args.options.output, JSON.stringify(_account));
         }
-      });
+        callback();
+      } else {
+        vorpal.log("Ethereum Address:\t\t" + address);
+        vorpal.log("Yearly Demand:\t\t\t" + _account.ja + " kWh");
+        vorpal.log("Total Collected:\t\t" + _account.totalSupply + " Corrently");
+        vorpal.log("Converted:\t\t\t" + _account.convertedSupply + " Corrently");
+        vorpal.log("Available:\t\t\t" + (_account.totalSupply - _account.convertedSupply) + " Corrently");
+        vorpal.log("Valid from:\t\t\t" + new Date(_account.created).toLocaleString() + "");
+        vorpal.log("Nominal Generation:\t\t" + _account.nominalCori + " kWh/year");
+        _account.getCoriEquity().then(function (x) {
+          vorpal.log("Confirmed Generation Equity:\t" + x + " kWh/year");
+          vorpal.log("Metered Generation:\t\t" + _account.generation + " kWh");
+          vorpal.log("Metered Consumption:\t\t" + _account.meteredconsumption + " kWh");
+          vorpal.log("./. Imbalance:\t\t\t" + (_account.generation - _account.meteredconsumption) + " kWh");
+          if (address == wallet.address) {
+            wallet.getBalance().then(function (balance) {
+              vorpal.log("ETH Balance:\t\t\t" + _correntlywallet2.default.utils.formatEther(balance) + " ETH");
+              callback();
+            });
+          } else {
+            callback();
+          }
+        });
+      }
     });
   });
   vorpal.command('deletePending <id>', 'delete pending transaction').action(function (args, callback) {

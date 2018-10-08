@@ -34,6 +34,24 @@ ID	Corrently	Name
 #2:	29		WindPark Maingau
 ```
 
+### account
+Prints all information associated to Ethereum Account
+```
+$ corrently account homestead:0xc430fAB09288C272A321C086d330609CD8b71447
+Ethereum Address:		0xc430fAB09288C272A321C086d330609CD8b71447
+Yearly Demand:			2425 kWh
+Total Collected:		1963 Corrently
+Converted:			1665 Corrently
+Available:			298 Corrently
+Valid from:			2018-10-6 14:53:18
+Nominal Generation:		63 kWh/year
+Confirmed Generation Equity:	200.72 kWh/year
+Metered Generation:		2.5250572645230847 kWh
+Metered Consumption:		1863 kWh
+./. Imbalance:			-1860.4749427354768 kWh
+
+```
+
 ### buy
 Issues an OTC buy transaction.
 ```
