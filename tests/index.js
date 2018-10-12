@@ -79,7 +79,13 @@ describe('Use Case: Buy Capacity Over The Counter (OTC)', function() {
   this.timeout(300000);
 
   it('Create new wallet', function(done) {
-    wallet = CorrentlyWallet.Wallet.createRandom().connect(CorrentlyWallet.providers.getDefaultProvider('homestead'));
+    wallet = CorrentlyWallet.Wallet.createRandom();
+    if(typeof wallet.createConnect != "undefined") {
+      wallet.connect(CorrentlyWallet.providers.getDefaultProvider('homestead'));
+    } else {
+      wallet.provider = CorrentlyWallet.providers.getDefaultProvider('homestead');
+    }
+        
     CorrentlyWallet.CorrentlyAccount(wallet.address).then(function(_account) {
         account=_account;
         done();
