@@ -30,7 +30,12 @@ describe('Consensus validation (CORI and Corrently)', function() {
   let account=null;
 
   it('Get CORI equity directly linked to wallet (should be 0)', function(done) {
-    wallet = CorrentlyWallet.Wallet.createRandom().connect(CorrentlyWallet.providers.getDefaultProvider('homestead'));
+    wallet = CorrentlyWallet.Wallet.createRandom();
+    if(typeof wallet.createConnect != "undefined") {
+      wallet.connect(CorrentlyWallet.providers.getDefaultProvider('homestead'));
+    } else {
+      wallet.provider = CorrentlyWallet.providers.getDefaultProvider('homestead');
+    }
     CorrentlyWallet.CorrentlyAccount(wallet.address).then(function(twin) {
         account=twin;
         twin.getCoriEquity().then(function(coriEquity) {
