@@ -13,11 +13,11 @@ var cwcli = async function cwcli() {
   var privateKey = await storage.getItem("privateKey");
   var wallet = null;
   if (privateKey != null) {
-    wallet = new _correntlywallet2.default.Wallet(privateKey, _correntlywallet2.default.getDefaultProvider());
+    wallet = new _correntlywallet2.default.Wallet(privateKey, _correntlywallet2.providers.getDefaultProvider());
   } else {
     wallet = _correntlywallet2.default.Wallet.createRandom();
     await storage.setItem("privateKey", wallet.privateKey);
-    wallet = new _correntlywallet2.default.Wallet(wallet.privateKey, _correntlywallet2.default.getDefaultProvider());
+    wallet = new _correntlywallet2.default.Wallet(wallet.privateKey, _correntlywallet2.providers.getDefaultProvider());
   }
 
   var vorpal = require('vorpal')();
