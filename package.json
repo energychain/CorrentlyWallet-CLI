@@ -1,6 +1,6 @@
 {
 	"name": "correntlywallet-cli",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"description": "Corrently Wallet - Command Line Interface",
 	"keywords": [
 		"corrently",
@@ -32,7 +32,7 @@
 		"@babel/polyfill": "^7.0.0",
 		"babel-preset-es2015": "^6.24.1",
 		"babel-preset-node8": "^1.2.0",
-		"correntlywallet": "^1.0.4",
+		"correntlywallet": "^1.0.6",
 		"forever-agent": "^0.6.1",
 		"node-localstorage": "^1.3.1",
 		"node-persist": "^3.0.1",
