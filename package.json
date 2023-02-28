@@ -48,7 +48,7 @@
 		"@babel/core": "^7.1.2",
 		"@babel/preset-env": "^7.1.0",
 		"esm": "^3.0.84",
-		"mocha": "^5.2.0",
+		"mocha": "^10.2.0",
 		"webpack": "^4.20.2",
 		"webpack-cli": "^3.1.2"
 	},
